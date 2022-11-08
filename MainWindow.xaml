@@ -1,0 +1,114 @@
+﻿<Window x:Class="UT4_Superheroes.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UT4_Superheroes"
+        xmlns:modelos="clr-namespace:UT4_Superheroes.Modelo"
+        mc:Ignorable="d"
+        Title="Superhéroes" MinHeight="450" MinWidth="600" Height="600" Width="800" Icon="Assets/shield.ico">
+    <Window.Resources>
+        <modelos:ConvertidorVengador x:Key="conversorVengadores"></modelos:ConvertidorVengador>
+        <modelos:ConvertidorXmen x:Key="conversorXmen"></modelos:ConvertidorXmen>
+        <modelos:ConvertidorVillano x:Key="conversorVillano"></modelos:ConvertidorVillano>
+
+        <Style TargetType="TextBlock" x:Key="nombre">
+            <Setter Property="FontSize" Value="40"></Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="FontSize" To="60" Duration="0:0:5"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="FontSize" To="40" Duration="0:0:5"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="Image" x:Key="img_style_superHeroe">
+            <Setter Property="Opacity" Value="0.5"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=border_img, Path=IsMouseOver}" Value="true">
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Border">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=border_img, Path=IsMouseOver}" Value="true">
+                    <Setter Property="BorderThickness" Value="4"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Image" x:Key="img_style_icon_avenger">
+            <Setter Property="Margin" Value="10"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=HeroeActual.Vengador}" Value="true">
+                    <Setter Property="Source" Value="Assets/avengers.png"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="Image" x:Key="img_style_icon_xmen">
+            <Setter Property="Margin" Value="10"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=HeroeActual.Xmen}" Value="true">
+                    <Setter Property="Source" Value="Assets/xmen.png"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DockPanel">
+            
+            <Setter Property="Background" Value="Green"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=HeroeActual.Heroe}" Value="false">
+                    <Setter Property="Background" Value="Red"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel x:Name="dp_superheroes">
+        <!-- Background="{Binding Converter={StaticResource conversorVillano}, Path=HeroeActual.Heroe}" -->
+        <DockPanel  Height="60" LastChildFill="False" DockPanel.Dock="top">
+            <TextBlock x:Name="txb_nombre" Style="{StaticResource nombre}" Margin="10,0,0,0" FontWeight="Bold" Foreground="White" DockPanel.Dock="Left" Text="{Binding Path=HeroeActual.Nombre}">
+                <TextBlock.Effect>
+                    <DropShadowEffect/>
+                </TextBlock.Effect></TextBlock>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Image Style="{StaticResource img_style_icon_xmen}"></Image>
+                <!-- Source="{Binding Converter={StaticResource conversorXmen}, Path=HeroeActual.Xmen}" -->
+                <Image Style="{StaticResource img_style_icon_avenger}"></Image>
+                <!-- Source="{Binding Converter={StaticResource conversorVengadores}, Path=HeroeActual.Vengador}" -->
+            </StackPanel>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Height="40" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="center">
+            <Image Name="img_atras" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" MouseDown="img_atras_MouseDown"/>
+            <TextBlock x:Name="tbx_numeroPagina" Text="{Binding Path=ContadorActual}" FontSize="24"></TextBlock>
+            <TextBlock x:Name="tbx_barra" Text="/" FontSize="24"></TextBlock>
+            <TextBlock Text="{Binding Path=TotalHeroes}" FontSize="24"></TextBlock>
+            <Image Name="img_adelante" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" MouseDown="img_adelante_MouseDown">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="180"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </StackPanel>
+        <Border x:Name="border_img" BorderBrush="Black" Margin="10"  >
+            <Image Style="{StaticResource img_style_superHeroe}" x:Name="img_superHeroe" Stretch="UniformToFill" Source="{Binding Path=HeroeActual.Imagen}"></Image>
+        </Border>
+    </DockPanel>
+</Window>
